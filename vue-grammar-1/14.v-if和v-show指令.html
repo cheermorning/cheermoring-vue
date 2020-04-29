@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>v-if和v-show</title>
+    <script src="../lib/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <input type="button" value="Toggle" @click="flag=!flag">
+    <!--v-if控制h2标签的删除和创建，如果flag为true，则创建，否则，删除-->
+    <!--v-if有较高的切换性能消耗，如果频繁的切换，最好不要使用v-if-->
+    <h2 v-if="flag">这是对v-if的显示</h2>
+    <!--v-show控制h3标签的显示与隐藏，如果flag为true,则显示，否则，增加display:none样式，隐藏。-->
+    <!--v-show有较高的初始渲染性能消耗，如果从一开始就不需要客户看到改标签，则不推荐使用v-show-->
+    <h3 v-show="flag">这是对v-show的显示</h3>
+</div>
+
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            flag: true
+        }
+    })
+</script>
+</body>
+</html>

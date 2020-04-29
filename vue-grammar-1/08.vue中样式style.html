@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue样式</title>
+    <script src="../lib/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <!--v-bind绑定的style中填写对象，具体的是无序键值对的组合-->
+    <h2 :style="[styleObj1, styleObj2]">这是一个最大的H2,没有其他能比！！！</h2>
+</div>
+
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            styleObj1: {'color': 'red', 'font-weight': 200},
+            styleObj2: {'font-style': 'italic'}
+        }
+    })
+</script>
+</body>
+</html>

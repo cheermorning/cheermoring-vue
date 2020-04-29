@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="../lib/07.css" rel="external nofollow">
+    <script type="text/javascript" src="../lib/vue.js"></script>
+    <meta charset="UTF-8">
+    <title>my-calculator</title>
+</head>
+<body>
+<div id="calculator">
+    <!--显示框-->
+    <input-box v-bind:input-show="inputShow">
+    </input-box>
+    <btn-list>
+        <div @click="clearValue()" class=" btn-30 btn-radius color-red clear-marginleft">C</div>
+        <div class=" btn-30 btn-radius color-blue">+/-</div>
+        <div @click="inputValue('%')" class=" btn-30 btn-radius color-blue">%</div>
+        <div @click="backValue()" class=" btn-70 btn-radius color-red font-14">←</div>
+        <div @click="inputValue('7')" class=" btn-30 btn-radius clear-marginleft">7</div>
+        <div @click="inputValue('8')" class=" btn-30 btn-radius">8</div>
+        <div @click="inputValue('9')" class=" btn-30 btn-radius">9</div>
+        <div @click="squareValue()" class=" btn-30 btn-radius color-blue font-14">×²</div>
+        <div @click="radicalValue()" class=" btn-30 btn-radius color-blue font-12">√</div>
+        <div @click="inputValue('4')" class=" btn-30 btn-radius clear-marginleft">4</div>
+        <div @click="inputValue('5')" class=" btn-30 btn-radius">5</div>
+        <div @click="inputValue('6')" class=" btn-30 btn-radius">6</div>
+        <div @click="inputValue('×')" class=" btn-30 btn-radius color-blue font-14">×</div>
+        <div @click="inputValue('÷')" class=" btn-30 btn-radius color-blue font-12">÷</div>
+        <div @click="inputValue('1')" class=" btn-30 btn-radius clear-marginleft">1</div>
+        <div @click="inputValue('2')" class=" btn-30 btn-radius">2</div>
+        <div @click="inputValue('3')" class=" btn-30 btn-radius">3</div>
+        <div @click="inputValue('+')" class=" btn-30 btn-radius color-blue font-14">+</div>
+        <div @click="inputValue('-')" class=" btn-30 btn-radius color-blue font-14">-</div>
+        <div @click="inputValue('0')" class=" btn-70 btn-radius clear-marginleft">0</div>
+        <div @click="inputValue('.')" class=" btn-30 btn-radius">.</div>
+        <div @click="calValue()" class=" btn-70 btn-radius color-red font-14">=</div>
+    </btn-list>
+</div>
+<script>
+    var calculator = new Vue({
+        el: '#calculator',
+        data: {
+            inputShow: {
+                value: '0'
+            }
+        },
+        components: {
+            'input-box': {
+                props: ['inputShow'],
+                computed: {
+                    value: function () {
+                        return this.inputShow.value
+                    }
+                },
+                template: '<input id="input-box" type="text" size="21" maxlength="21" v-model="value" readonly="readonly">'
+            },
+            'btn-list': {
+                template: '<div id="btn-list"><slot></slot></div>'
+            }
+        },
+        methods: {
+            inputValue(param) {
+                if (Object.prototype.toString.call(this.inputShow.value) == "[object Number]") {   //判断输入框内容是否为数字类型
+                    this.inputShow.value = "0";   //数字类型说明是上个计算结果,清空内容
+                }
+                var str = '' + this.inputShow.value; //输入内容时,将输入框内容转为字符串类型
+                var len = str.length;
+                var arr = ["+", "-", "×", "÷"];
+                var num = ('' + parseFloat(str.split('').reverse().join(''))).split('').reverse().join('');   //parseInt(str.split('').reverse().join('')))是获取输入框内最后一串数字,再反转回来 ,num为输入框内最后一串数字
+                var nlen = num.length;
+                if ((num != '0' && param != '.') || (param == '.' && num.indexOf(".") == -1)) {   //输入框内最后一串数字不为0时拼接字符串
+                    if (arr.indexOf(str.charAt(len - 1)) != -1 && arr.indexOf(param) != -1) {    //若一开始输入内容为运算符,输入无效
+                        return;
+                    }
+                    this.inputShow.value += param;   //拼接输入内容
+                } else {
+                    arr.push("%");
+                    if (param == '.') {      //若num中已有小数点,输入内容为小数点,视为无效
+                        return;
+                    } else if (!(arr.indexOf(param) != -1)) {    //判断输入框内最后一个字符不为运算符
+                        this.inputShow.value = str.substring(0, str.length - nlen) + param;  //输入框内最后一串数字为0时,删除0拼接
+                    }
+                }
+            },
+            clearValue() {      //清空输入框内容
+                this.inputShow.value = '0';
+            },
+            calValue() {       //计算结果
+                var str = this.inputShow.value;
+                str = str.replace('×', '*').replace('÷', '/').replace('%', '*0.01');    //替换运算符
+                try {
+                    this.inputShow.value = eval(str);      //若用户输入内容不符合运算规则,不计算
+                } catch (error) {
+                    return;
+                }
+            },
+            squareValue() {             //平方计算
+                var str = this.inputShow.value;
+                this.inputShow.value = Math.pow(eval(str), 2)
+            },
+            radicalValue() {             //开根号计算
+                var str = this.inputShow.value;
+                this.inputShow.value = Math.sqrt(eval(str));
+            },
+            backValue() {              //删除键,删除单个字符
+                var str = this.inputShow.value;
+                if (str.length == 1) {
+                    this.inputShow.value = "0";
+                } else {
+                    this.inputShow.value = str.slice(0, str.length - 1);
+                }
+            },
+            /*oppositeValue(){            //正负号取值
+              var str = this.inputShow.value;
+              var num = (''+parseInt(str.split('').reverse().join(''))).split('').reverse().join('');   //获取输入框内最后遗传数字
+              var nlen = num.length;
+              debugger;
+              if(!isNaN( parseInt(str.charAt(str.length-1))) && num != 0){  //当输入框末位字符为数字且最后一串数字不为0时,取正负
+                this.inputShow.value = str.substring(0,str.length-nlen)+`(-${num})`;
+              }
+            }*/
+        }
+    })
+</script>
+</body>
+</html>
+

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计算器</title>
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+    <script src="../lib/jquery/jquery-3.2.1.min.js"></script>
+    <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../lib/vue.js"></script>
+
+    <style>
+        body {
+            text-align: center;
+        }
+
+        #app {
+            margin: 0px auto;
+        }
+
+        .result {
+            width: 400px;
+            height: 80px;
+            /*transform: translate(350px);*/
+        }
+
+        .btn-default {
+            margin: 0px;
+            width: 50px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <!--计算器-->
+    <h2>尹臣计算器</h2>
+    <br>
+    <textarea class="result" v-model="result"></textarea>
+    <br/>
+    <input class="btn btn-default" type="button" value="7" @click="initValue('7')"/>
+    <input class="btn btn-default" type="button" value="8" @click="initValue('8')"/>
+    <input class="btn btn-default" type="button" value="9" @click="initValue('9')"/>
+    <input class="btn btn-default" type="button" value="+" @click="initValue('+')"/>
+    <br/>
+    <input class="btn btn-default" type="button" value="4" @click="initValue('4')"/>
+    <input class="btn btn-default" type="button" value="5" @click="initValue('5')"/>
+    <input class="btn btn-default" type="button" value="6" @click="initValue('6')"/>
+    <input class="btn btn-default" type="button" value="-" @click="initValue('-')"/>
+    <br/>
+    <input class="btn btn-default" type="button" value="1" @click="initValue('1')"/>
+    <input class="btn btn-default" type="button" value="2" @click="initValue('2')"/>
+    <input class="btn btn-default" type="button" value="3" @click="initValue('3')"/>
+    <input class="btn btn-default" type="button" value="×" @click="initValue('×')"/>
+    <br/>
+    <input class="btn btn-default" type="button" value="C" @click="clearValue()"/>
+    <input class="btn btn-default" type="button" value="0" @click="initValue('0')"/>
+    <input class="btn btn-default" type="button" value="." @click="initValue('.')"/>
+    <input class="btn btn-default" type="button" value="÷" @click="initValue('÷')"/>
+    <input class="btn btn-default" type="button" value="=" @click="calcValue()"/>
+    <br/>
+</div>
+
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            result: 0
+        },
+        methods: {
+            initValue(param) {
+                if (Object.prototype.toString.call(this.result) == "[object Number]") {   //判断输入框内容是否为数字类型
+                    this.result = "0";   //数字类型说明是上个计算结果,清空内容
+                }
+                //输入内容时，将输入内容转化成字符串
+                let str = '' + this.result;
+                let len = str.length;
+                let arr = ["+", "-", "*", "/"];
+                let num = ('' + parseFloat(str.split('').reverse().join())).split('').reverse().join('');
+                let nlen = num.length;
+                if ((num != '0' && param != '.') || (param == '.' && num.indexOf(".") == -1)) {
+                    if (arr.indexOf(str.charAt(len - 1)) != -1 && arr.indexOf(param) != -1) {    //若一开始输入内容为运算符,输入无效
+                        return;
+                    }
+                    this.result += param;   //拼接输入内容
+                } else {
+                    arr.push("%");
+                    if (param == '.') {      //若num中已有小数点,输入内容为小数点,视为无效
+                        return;
+                    } else if (!(arr.indexOf(param) != -1)) {    //判断输入框内最后一个字符不为运算符
+                        this.result = str.substring(0, str.length - nlen) + param;  //输入框内最后一串数字为0时,删除0拼接
+                    }
+                }
+
+            },
+            calcValue() {       //计算结果
+                var str = this.result;
+                str = str.replace('×', '*').replace('÷', '/').replace('%', '*0.01');    //替换运算符
+                try {
+                    this.result = eval(str);      //若用户输入内容不符合运算规则,不计算
+                } catch (error) {
+                    return;
+                }
+            },
+            clearValue() {
+                this.result = '0'
+            }
+        }
+    })
+</script>
+</body>
+</html>

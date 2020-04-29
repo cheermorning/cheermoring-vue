@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>v-for中Key属性</title>
+    <script src="../lib/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <!---->
+    <h2>唐宋八大家</h2>
+    <p v-for="item in list" :key="item.id">
+        <input type="checkbox">
+        ID: {{item.id}}, Name: {{item.name}}, Dynasty: {{item.dynasty}}
+    </p>
+    <!--添加按钮-->
+    <div>
+        <label for="id">
+            ID:
+        </label>
+        <input type="text" id="id" v-model="id"/>
+        <label for="name">
+            Name:
+        </label>
+        <input type="text" id="name" v-model="name"/>
+        <label for="dynasty">
+            Dynasty:
+        </label>
+        <input type="text" id="dynasty" v-model="dynasty"/>
+
+        <input type="button" value="添加" @click="add"/>
+    </div>
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            id: '',
+            name: '',
+            dynasty: '',
+            list: [
+                {id: 1, name: '韩愈', dynasty: '唐朝'},
+                {id: 2, name: '柳宗元', dynasty: '唐朝'},
+                {id: 3, name: '欧阳修', dynasty: '宋朝'},
+                {id: 4, name: '王安石', dynasty: '宋朝'},
+                {id: 5, name: '曾巩', dynasty: '宋朝'},
+                {id: 6, name: '苏洵', dynasty: '宋朝'},
+                {id: 7, name: '苏轼', dynasty: '宋朝'}
+            ]
+        },
+        methods: {
+            add() {
+                this.list.unshift({id: this.id, name: this.name, dynasty: this.dynasty})
+            }
+        }
+    })
+</script>
+</body>
+</html>

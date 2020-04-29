@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>事件修饰符</title>
+    <script src="../lib/vue.js"></script>
+    <style>
+        .inner {
+            background-color: chartreuse;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <!--.stop修饰符：阻止冒泡-->
+    <!--<div class="inner" @click="div1Handle">
+        <input type="button" value="盘他" @click.stop="btnHandle" >
+        <h2>{{msg}}</h2>
+    </div>-->
+
+    <!--.prevent修饰符：阻止默认行为-->
+    <!--<a href="https://www.baidu.com" @click.prevent="aHandle">有问题，找百度</a>-->
+
+    <!--.capture修饰符：实现捕获触发事件-->
+    <!--<div class="inner" @click.capture="div1Handle">
+        <input type="button" value="盘他" @click="btnHandle" >
+        <h2>{{msg}}</h2>
+    </div>-->
+
+    <!--.self修饰符：只有点击当前元素时，才会触发点击事件-->
+    <div class="inner" @click.self="div1Handle">
+        <input type="button" value="盘他" @click="btnHandle">
+        <h2>{{msg}}</h2>
+    </div>
+
+    <!--.once修饰符：使用once只触发一次事件-->
+    <a href="https://www.baidu.com" @click.prevent.once="aHandle">有问题，找百度</a>
+</div>
+
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            msg: '测试事件修饰符'
+        },
+        methods: {
+            div1Handle() {
+                console.log("点击外部div的事件")
+            },
+            btnHandle() {
+                console.log("点击按钮的事件")
+            },
+            aHandle() {
+                console.log("点击a标签的事件")
+            }
+        }
+    })
+</script>
+</body>
+</html>

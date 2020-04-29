@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue样式</title>
+    <script src="../lib/vue.js"></script>
+    <style>
+        .red {
+            color: red;
+        }
+
+        /*瘦体*/
+        .thin {
+            font-weight: 200;
+        }
+
+        /*倾斜*/
+        .italic {
+            font-style: italic;
+        }
+
+        /*激活*/
+        .active {
+            letter-spacing: 0.5em;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <!--第一种方式：v-bind绑定class属性，属性是一个数组-->
+    <!--<h2  :class="['red','thin']">这是一个适中大小的H2，很完美，完美到你爱不释手！！！</h2>-->
+
+
+    <!--第二种方式：v-bind绑定class属性，属性也是一个数组，但是数组中可以执行三元表达式-->
+    <!--<h2  :class="['red','thin', flag?'active':'']">这是一个适中大小的H2，很完美，完美到你爱不释手！！！</h2>-->
+
+    <!--第三种方式：v-bind绑定class属性，属性也是一个数组，但是数组中嵌套对象-->
+    <!--<h2  :class="['red','thin', {'active':flag}]">这是一个适中大小的H2，很完美，完美到你爱不释手！！！</h2>-->
+
+    <!--第四种方式：v-bind绑定class属性，属性是一个对象-->
+    <h2 :class="{red:true, thin:flag, italic: !flag, active:flag}">这是一个适中大小的H2，很完美，完美到你爱不释手！！！</h2>
+</div>
+
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            flag: true
+        },
+        methods: {}
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>v-model指令</title>
+    <script src="../lib/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h3>{{msg}}</h3>
+
+    <!--v-bind属性绑定并不能实现数据的双向绑定-->
+    <!--<input type="text" :value="msg" style="width:90%" />-->
+
+    <!--v-model可以实现数据的双向绑定，而且v-model只能用于表单元素中-->
+    <input type="text" v-model="msg" style="width:90%"/>
+
+</div>
+
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            msg: '我们大家都爱敲代码，爱学习，爱思考，爱看手机，简直是完美！'
+        }
+    })
+</script>
+</body>
+</html>
