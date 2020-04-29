@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>品牌列表</title>
+    <script src="../lib/vue.js"></script>
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+<div id="app">
+
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            <h3 class="panel-title">品牌列表</h3>
+        </div>
+        <div class="panel-body form-inline">
+            <label>
+                ID
+                <input type="text" class="form-control" v-model="id">
+            </label>
+            <label>
+                名称
+                <input type="text" class="form-control" v-model="name" @keyup.f2="add()">
+            </label>
+            <input autofocus type="button" value="添加" class="btn btn-danger" @click="add">
+
+            <!--搜索-->
+            <label style="float: right;">
+                搜索关键字
+                <input type="text" class="form-control" v-model="keywords" v-focus>
+            </label>
+        </div>
+    </div>
+
+    <!--列表-->
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>名称</th>
+            <th>时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--之前，v-for中的数据都是来源于data中的list数组-->
+        <!--现在，v-for中的数据需要来源search()方法的返回结果，这里需要我们传递参数keywords给search方法-->
+        <tr v-for="item in search(keywords)" :key="item.id">
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.ctime | dateFormat2()}}</td>
+            <td>
+                <a class="btn bg-success" href="" @click.prevent="del(item.id)">删除</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+
+    /*过滤器采用的是就近调用原则，如果全局过滤器和私有过滤器都有，则优先调用私有过滤器*/
+    /*自定义全局过滤器 时间格式化dateFormat*/
+    Vue.filter('dateFormat2', function (dateStr, pattern = '') {
+        //获取时间
+        var dt = new Date(dateStr);
+
+        //获取年月日
+        var y = dt.getFullYear();
+        var m = (dt.getMonth() + 1).toString().padStart(2, '0');
+        var d = dt.getDate().toString().padStart(2, '0');
+
+        if (pattern.toLowerCase() === 'yyyy-mm-dd') {
+            return `${y}-${m}-${d}`;
+        } else {
+            var hh = dt.getHours().toString().padStart(2, '0');
+            var mm = dt.getMinutes().toString().padStart(2, '0');
+            var ss = dt.getSeconds().toString().padStart(2, '0');
+            return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+        }
+    });
+
+
+    /*自定义全局的按键修饰符 f2按键*/
+    Vue.config.keyCodes.f2 = 113;
+
+    /*自定义全局的指令 v-focus*/
+    /* 参数1： 指令名称，不需要加v-前缀
+    * 参数2：是一个对象， 对象中包含指令相关的函数*/
+    Vue.directive('focus2', {
+        //在每个钩子函数中， 第一个参数永远是el, 表示被绑定指令的那个元素， 是一个原生的JS对象
+        bind: function (el) {
+            console.log("每当指令绑定到元素上的时候，立即执行bind函数，且只执行一次！");
+            console.log("focus获取焦点在这个bind函数上不起作用，晕啊因式绑定指令的时候，元素还没有写入到DOM中取去");
+
+        },
+        inserted: function (el) {
+            console.log("元素插入到DOM的时候， 立即执行inserted函数，且只触发一次");
+            console.log("一个元素，只有插入dom之后，才会获取焦点")
+            el.focus();
+        },
+        updated: function (el) {
+            console.log("当DOM更新的时候，会执行updated函数，可能会执行多次")
+        }
+    })
+
+
+    //在月份、日期、小时等小于10时前面补0
+    var padDate = function (value) {
+        return value < 10 ? '0' + value : value;
+    }
+
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            id: '',
+            name: '',
+            keywords: '',
+            list: [
+                {id: 1, name: '奥迪', ctime: new Date()},
+                {id: 2, name: '宝马', ctime: new Date()},
+                {id: 3, name: '奔驰', ctime: new Date()},
+                {id: 4, name: '宝骏', ctime: new Date()},
+                {id: 5, name: '传祺', ctime: new Date()},
+                {id: 6, name: '英菲尼迪', ctime: new Date()},
+                {id: 7, name: '特斯拉', ctime: new Date()},
+                {id: 8, name: '法拉利', ctime: new Date()},
+            ]
+        },
+        methods: {
+            add() {
+                //分析：
+                //1. 获取input中的内容，可以从vm的data中找到
+                //2. 将找到的内容拼接成一个对象，
+                //3. 将对象添加到list数组中
+                //4. 将input中的内容清空
+
+                let car = {id: this.id, name: this.name, ctime: new Date()}
+                this.list.push(car);
+                this.id = this.name = '';
+            },
+            del(id) {
+                //分析：
+                //1.根据id找到该对象的索引
+                //2.根据索引删除对应的对象，使用数组的splice()方法
+
+                //第一种方法：采用some()方法，在some方法中，只要返回true,就会终止该数组的后续循环
+                /*this.list.some((item, i) => {
+                    if(item.id == id){
+                        //
+                        this.list.splice(i,1);
+                        return true;
+                }
+                })*/
+
+                //第二种方法：采用findIndex方法找到索引,然后在根据索引删除
+                let index = this.list.findIndex((item) => {
+                    if (item.id == id) {
+                        return true;
+                    }
+                })
+                this.list.splice(index, 1);
+            },
+            search(keywords) {
+                //分析：
+                //1. 执行for循环把所有符合搜索关键字的数据保存到一个新数组，并返回。
+                /*var newList = [];
+                this.list.forEach(item=>{
+                    if(item.name.indexOf(keywords) != -1){
+                        newList.push(item)
+                    }
+                })
+                return newList;*/
+
+                // forEach some filter findIndex都是数组的新方法，执行遍历，进行对应的操作
+
+                // ES6中 为字符串提供了一个新方法 String.prototype.includes('要包含的字符串')， 如果包含，返回true,如果不包含，返回false
+                return this.list.filter(item => {
+                    if (item.name.includes(keywords)) {
+                        return item;
+                    }
+                })
+            }
+        },
+        filters: {
+            dateFormat: function (dateStr, pattern = '') {
+                //获取时间
+                let dt = new Date(dateStr);
+
+                //获取年月日
+                let y = dt.getFullYear();
+                let m = padDate(dt.getMonth() + 1);
+                let d = padDate(dt.getDate());
+
+                if (pattern.toLowerCase() === 'yyyy-mm-dd') {
+                    return `${y}-${m}-${d}`;
+                } else {
+                    let hh = padDate(dt.getHours());
+                    let mm = padDate(dt.getMinutes());
+                    let ss = padDate(dt.getSeconds());
+                    return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+                }
+            }
+        },
+        directives: {
+            focus: {
+                inserted: function (el) {
+                    el.focus();
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

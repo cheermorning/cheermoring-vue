@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>过滤器使用</title>
+    <script src="../lib/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h2>{{msg | msgFormat('', '邪恶')}}</h2>
+</div>
+<script>
+
+    /*自定义全局的过滤器*/
+    Vue.filter('msgFormat', function (msg, oldArg, newArg) {
+        /*replace方法中的第一个参数，可以填字符串，也可以传正则表达式*/
+        return msg.replace(/单纯/g, newArg);
+    })
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            msg: '曾经，你也是一个单纯的人， 单纯的你， 傻傻的你，始终坚信你是世界上最单纯的男人！！！'
+        }
+    })
+</script>
+</body>
+</html>
