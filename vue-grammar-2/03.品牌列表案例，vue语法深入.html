@@ -27,7 +27,7 @@
             <!--搜索-->
             <label style="float: right;">
                 搜索关键字
-                <input type="text" class="form-control" v-model="keywords" v-focus>
+                <input type="text" class="form-control" v-model="keywords" v-focus v-color="color">
             </label>
         </div>
     </div>
@@ -47,7 +47,7 @@
         <!--现在，v-for中的数据需要来源search()方法的返回结果，这里需要我们传递参数keywords给search方法-->
         <tr v-for="item in search(keywords)" :key="item.id">
             <td>{{item.id}}</td>
-            <td>{{item.name}}</td>
+            <td v-fontweight="900" v-fontstyle="'oblique'">{{item.name}}</td>
             <td>{{item.ctime | dateFormat2()}}</td>
             <td>
                 <a class="btn bg-success" href="" @click.prevent="del(item.id)">删除</a>
@@ -116,6 +116,7 @@
             id: '',
             name: '',
             keywords: '',
+            color: 'red',
             list: [
                 {id: 1, name: '奥迪', ctime: new Date()},
                 {id: 2, name: '宝马', ctime: new Date()},
@@ -203,10 +204,27 @@
             }
         },
         directives: {
-            focus: {
+            /*自定义指令，一般行为相关的都写在inserted钩子函数中，样式相关的都写在bind钩子函数中*/
+
+            /*搜索框获取焦点*/
+            'focus': {
                 inserted: function (el) {
                     el.focus();
                 }
+            },
+            /*给搜索框中的字体上颜色*/
+            'color': {
+                bind: function (el, binding) {
+                    el.style.color = binding.value;
+                }
+            },
+            'fontweight': {
+                bind: function (el, binding) {
+                    el.style.fontWeight = binding.value;
+                }
+            },
+            'fontstyle': function (el, binding) {
+                el.style.fontStyle = binding.value;
             }
         }
     })

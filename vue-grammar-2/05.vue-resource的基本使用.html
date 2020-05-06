@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue-Resource</title>
+    <script src="../lib/vue.js"></script>
+    <script src="../lib/vue-resource/vue-resource.js"></script>
+</head>
+<body>
+<div id="app">
+    <h3>vue-resource的基本使用，要了解它与axios的区别</h3>
+    <input type="button" value="get请求" @click="getInfo">
+    <input type="button" value="post请求" @click="postInfo">
+    <input type="button" value="jsonp请求" @click="jsonpInfo">
+</div>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {},
+        methods: {
+            getInfo() {
+                this.$http.get('http://jsonplaceholder.typicode.com/users', {}).then(function (result) {
+                    console.log(result.body);
+                })
+            },
+            postInfo() {
+                this.$http.post('http://jsonplaceholder.typicode.com/users', {}, {emulateJSON: true}).then(function (result) {
+                    console.log(result.body);
+                })
+            },
+            jsonpInfo() {
+                this.$http.jsonp('http://jsonplaceholder.typicode.com/users', {}).then(function (result) {
+                    console.log(result.body)
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>
