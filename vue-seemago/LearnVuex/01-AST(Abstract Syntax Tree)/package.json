@@ -1,0 +1,15 @@
+{
+  "name": "exportific",
+  "version": "0.1.2",
+  "description": "改写源码中的函数为可exports.XXX形式",
+  "main": "exportific.js",
+  "bin": {
+    "exportific": "actual/exportafic.js"
+  },
+  "keywords": [],
+  "author": "wanthering",
+  "license": "ISC",
+  "dependencies": {
+    "recast": "^0.20.4"
+  }
+}
