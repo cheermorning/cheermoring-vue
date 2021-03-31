@@ -27,10 +27,11 @@ export default {
   .home-recommend{
     display: flex;
     text-align: center;
-    font-size: 12px;
+    font-size: 0.75rem;
 
-    padding: 10px 0 20px 0;
-    border-bottom: 10px solid #eeeeee;
+    padding: 0.625rem 0 1.25rem 0;
+    border-bottom: 10px solid #eee;
+
   }
 
   .recommend-item{

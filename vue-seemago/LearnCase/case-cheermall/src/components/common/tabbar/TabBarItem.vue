@@ -46,14 +46,14 @@ export default {
   /*均等分flex*/
   flex: 1;
   text-align: center;
-  height: 49px;
-  font-size: 16px;
+  height: 3rem;
+  font-size: .875rem;
 
 }
 
 .tab-bar-item img {
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
   margin-top: 3px;
   vertical-align: middle;
   margin-bottom: 1px;

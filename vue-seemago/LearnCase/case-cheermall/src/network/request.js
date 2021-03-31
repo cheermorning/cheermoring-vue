@@ -20,7 +20,7 @@ export function request(config){
 
   //3. 响应拦截器
   instance.interceptors.response.use(response=>{
-   console.log(response.data)
+   //console.log(response.data)
     return response.data;
   }, error => {
     //console.log(error)

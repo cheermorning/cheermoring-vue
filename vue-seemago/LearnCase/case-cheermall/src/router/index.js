@@ -2,10 +2,11 @@ import Vue from 'vue'
 import VueRouter from "vue-router";
 
 //引入组件
-const Home = () => import("../views/home/Home")
-const Category = () => import("../views/category/Category")
-const Cart = () => import("../views/cart/Cart")
-const Profile = () => import("../views/profile/Profile")
+const Home = () => import("views/home/Home")
+const Category = () => import("views/category/Category")
+const Cart = () => import("views/cart/Cart")
+const Profile = () => import("views/profile/Profile")
+const Detail = () => import("views/detail/Detail")
 
 //1. Vue注册VueRouter
 Vue.use(VueRouter)
@@ -31,6 +32,10 @@ const routes = [
   {
     path: '/profile',
     component: Profile
+  },
+  {
+    path: '/detail/:iid',
+    component: Detail
   }
 ]
 
