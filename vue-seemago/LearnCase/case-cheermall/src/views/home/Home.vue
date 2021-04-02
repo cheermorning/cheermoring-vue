@@ -54,7 +54,8 @@ import BackTop from "components/content/backtop/BackTop";
 
 
 import {getHomeMultiData, getHomeGoods} from "network/home";
-import {debounce} from "common/util";
+
+import {itemListenerMixin, backTopMixin} from "common/mixin";
 
 import BScroll from '@better-scroll/core'
 import PullUp from "@better-scroll/pull-up";
@@ -92,6 +93,7 @@ export default {
       isTabFixed: false,
       tabOffsetTop: 0,
       saveY: 0,
+      itemImageListener: null
     }
   },
   computed: {
@@ -109,21 +111,20 @@ export default {
       this.getHomeGoods(code);
     }
   },
+  mixins: [itemListenerMixin, backTopMixin],
   mounted() {
-    const refresh = debounce(this.$refs.scroll.localRefresh, 200, false);
-    //监听图片加载完成,因为在生命周期函数created中this.$refs可能拿到的值为undefined，所以在mounted中处理
-    this.$bus.$on('itemImageLoad', ()=>{
-      refresh();
-    })
+    console.log('首页mounted');
 
     //console.log(this.$refs.tabControl2.$el.offsetTop);
   },
   activated() {
     this.$refs.scroll.scrollTo(0, this.saveY, 0);
     this.$refs.scroll.localRefresh();
-    console.log('home activated');
+    //console.log('home activated');
   },
   deactivated() {
+    console.log('首页deactivated');
+    //1. 保存Y的位置
     this.saveY = this.$refs.scroll.getScrollY()
     //console.log('home deactivated')
   },
@@ -169,12 +170,7 @@ export default {
       this.isTabFixed = Math.abs(position.y) > this.tabOffsetTop;
       //console.log(this.isTabFixed);
     },
-    /*回到顶部点击事件监听，@click.native可以作为组件的点击事件，也就是要想点击组件，必须加native*/
-    backTopClick(){
-      let scroll = this.$refs.scroll;
-      //console.log(scroll.bscroll);
-      scroll.scrollTo(0,0);
-    },
+
     /*选项卡点击事件监听*/
     tabClick(index) {
       console.log(index);
