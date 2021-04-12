@@ -113,7 +113,7 @@ export default {
   },
   mixins: [itemListenerMixin, backTopMixin],
   mounted() {
-    console.log('首页mounted');
+    //console.log('首页mounted');
 
     //console.log(this.$refs.tabControl2.$el.offsetTop);
   },
@@ -123,7 +123,7 @@ export default {
     //console.log('home activated');
   },
   deactivated() {
-    console.log('首页deactivated');
+    //console.log('首页deactivated');
     //1. 保存Y的位置
     this.saveY = this.$refs.scroll.getScrollY()
     //console.log('home deactivated')
@@ -135,7 +135,7 @@ export default {
     //监听轮播图的图片加载完成
     swiperImageLoad(){
       this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
-      console.log(this.tabOffsetTop);
+      //console.log(this.tabOffsetTop);
     },
     //防抖函数
     debounce(func,wait){
