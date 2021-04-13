@@ -16,6 +16,7 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo"></detail-comment-info>
       <goods-list ref="recommend" :goods="recommends"></goods-list>
     </scroll>
+    <detail-bottom-bar></detail-bottom-bar>
     <back-top @click.native="backTopClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
@@ -28,6 +29,7 @@ import DetailShopInfo from "./children/DetailShopInfo";
 import DetailGoodsInfo from "./children/DetailGoodsInfo";
 import DetailParamInfo from "./children/DetailParamInfo";
 import DetailCommentInfo from "./children/DetailCommentInfo";
+import DetailBottomBar from "./children/DetailBottomBar";
 
 
 import Scroll from "components/common/scroll/Scroll";
@@ -48,8 +50,8 @@ export default {
     DetailGoodsInfo,
     DetailParamInfo,
     DetailCommentInfo,
+    DetailBottomBar,
     Scroll,
-    BackTop,
     GoodsList,
   },
   data() {
@@ -62,7 +64,6 @@ export default {
       paramInfo: {},
       commentInfo: {},
       recommends: [],
-      isShowBackTop: false,
       itemImageListener: null,
       navTopYs:[],
       getTopYs: null,
@@ -162,7 +163,7 @@ export default {
         }
       }
       //回到顶部
-      this.isShowBackTop = positionY > 1500;
+      this.showBackTop(positionY);
     },
     imageLoad() {
       this.$refs.scroll.localRefresh();
@@ -193,6 +194,6 @@ export default {
 }
 
 .detail-content {
-  height: calc(100% - 44px);
+  height: calc(100% - 44px - 55px);
 }
 </style>

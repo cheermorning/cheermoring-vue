@@ -1,4 +1,6 @@
 import {debounce} from "./util";
+import {BACKTOP_DISTANCE} from "./const";
+import BackTop from "components/content/backtop/BackTop";
 
 export const itemListenerMixin = {
   data(){
@@ -24,12 +26,23 @@ export const itemListenerMixin = {
 }
 
 export const backTopMixin = {
+  data(){
+    return {
+      isShowBackTop: false,
+    }
+  },
+  components:{
+    BackTop,
+  },
   methods:{
     /*回到顶部点击事件监听，@click.native可以作为组件的点击事件，也就是要想点击组件，必须加native*/
     backTopClick(){
       let scroll = this.$refs.scroll;
       //console.log("混入" + scroll.bscroll);
-      scroll.scrollTo(0,0);
+      scroll.scrollTo(0, 0, 300);
     },
+    showBackTop(positionY){
+      this.isShowBackTop = positionY > BACKTOP_DISTANCE;
+    }
   }
 }

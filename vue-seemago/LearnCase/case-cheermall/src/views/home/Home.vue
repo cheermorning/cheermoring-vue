@@ -50,7 +50,7 @@ import NavBar from "components/common/navbar/NavBar";
 import Scroll from "components/common/scroll/Scroll";
 import TabControl from "components/content/tabcontrol/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
-import BackTop from "components/content/backtop/BackTop";
+
 
 
 import {getHomeMultiData, getHomeGoods} from "network/home";
@@ -73,7 +73,7 @@ export default {
     NavBar,
     TabControl,
     GoodsList,
-    BackTop,
+
 
     Scroll,
   },
@@ -89,7 +89,7 @@ export default {
         'new': {page: 0, list: []},
         'sell': {page: 0, list: []},
       },
-      isShowBackTop: false,
+
       isTabFixed: false,
       tabOffsetTop: 0,
       saveY: 0,
@@ -163,11 +163,12 @@ export default {
     /*内容滚动定位：自定义事件，子组件向父组件传递数据*/
     contentScroll(position){
       //console.log(position)
+      const positionY = Math.abs(position.y);
       //回到顶部
-      this.isShowBackTop = Math.abs(position.y) > 1500;
+      this.showBackTop(positionY);
 
       //选项卡
-      this.isTabFixed = Math.abs(position.y) > this.tabOffsetTop;
+      this.isTabFixed = positionY > this.tabOffsetTop;
       //console.log(this.isTabFixed);
     },
 
