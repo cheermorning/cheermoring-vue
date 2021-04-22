@@ -15,26 +15,34 @@
       </div>
     </div>
     <div class="bar-item bar-right">
-      <div class="cart">加入购物车</div>
-      <div class="buy">购买</div>
+      <div class="cart" @click="addToCart">加入购物车</div>
+      <div class="buy">直接购买</div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-name: "DetailBottomBar"
+name: "DetailBottomBar",
+  methods:{
+    addToCart(){
+      // console.log("点击加入购物车");
+      this.$emit("addCart");
+    }
+  }
 }
 </script>
 
 <style scoped>
 .bottom-bar{
-  height: 55px;
+  height: 49px;
   background-color: #fff;
-  position: fixed;
+  position: relative;
+  /*bottom: 49px;*/
+  /*position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: 0;*/
 
   display: flex;
   flex: 1;
@@ -58,7 +66,7 @@ name: "DetailBottomBar"
     display: block;
     width: 22px;
     height: 22px;
-    margin: 6px auto 3px;
+    margin: 5px auto 3px;
     background: url("~assets/img/detail/detail_bottom.png") 0 0/100%;
   }
 
@@ -73,7 +81,7 @@ name: "DetailBottomBar"
   .bar-right {
     font-size: 15px;
     color: #fff;
-    line-height: 58px;
+    line-height: 49px;
   }
 
   .bar-right .cart {

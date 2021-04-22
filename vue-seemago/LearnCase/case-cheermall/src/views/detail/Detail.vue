@@ -1,12 +1,18 @@
 <template>
   <div id="detail">
+
+
     <detail-nav-bar class="detail-navbar" @titleClick="titleClick" ref="nav"></detail-nav-bar>
     <scroll class="detail-content"
             ref="scroll"
             :probe-type="3"
             @scroll="detailContentScroll"
     >
+
       <div class="detail-goods" ref="goods">
+<!--        <ul >
+          <li v-for="(item, index) in cartList">{{item}}</li>
+        </ul>-->
         <detail-swiper :top-images="topImages"></detail-swiper>
         <detail-base-info :goods="goods"></detail-base-info>
         <detail-shop-info :shop="shop"></detail-shop-info>
@@ -16,7 +22,7 @@
       <detail-comment-info ref="comment" :comment-info="commentInfo"></detail-comment-info>
       <goods-list ref="recommend" :goods="recommends"></goods-list>
     </scroll>
-    <detail-bottom-bar></detail-bottom-bar>
+    <detail-bottom-bar @addCart="addToCart"></detail-bottom-bar>
     <back-top @click.native="backTopClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
@@ -33,12 +39,12 @@ import DetailBottomBar from "./children/DetailBottomBar";
 
 
 import Scroll from "components/common/scroll/Scroll";
-import BackTop from "components/content/backtop/BackTop";
 import GoodsList from "components/content/goods/GoodsList";
 
 import {getDetail, getRecommend, Goods, Shop, GoodsParam} from "network/detail";
 import {itemListenerMixin, backTopMixin} from "common/mixin";
 import {debounce} from "common/util";
+import {mapState, mapActions} from 'vuex'
 
 export default {
   name: "Detail",
@@ -68,8 +74,15 @@ export default {
       navTopYs:[],
       getTopYs: null,
       currentIndex: 0,
-
     }
+  },
+  /*computed: mapState([
+    "cartList",
+  ]),*/
+  computed: {
+    ...mapState({
+      cartList: 'cartList',
+    })
   },
   created() {
     //获取详情数据
@@ -97,6 +110,7 @@ export default {
     //console.log('详情页deactivated');
   },
   methods: {
+    ...mapActions(["addCart"]),
     _getDetailData(){
       //获取iid
       this.iid = this.$route.params.iid
@@ -174,6 +188,25 @@ export default {
       console.log(index);
       //点击顶部标题驱动页面滑动
       this.$refs.scroll.scrollTo(0, -this.navTopYs[index], 200);
+    },
+    addToCart(){
+      //加入购物车
+      // console.log("-----");
+      //1. 获取购物车需要展示的信息
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.realPrice;
+      product.iid = this.iid;
+
+      //mutations
+      // this.$store.commit('addCart', product);
+      //actions
+      this.addCart(product).then((res)=>{
+        console.log(res);
+       this.$toast.show(res)
+      });
     }
   }
 }
@@ -194,6 +227,6 @@ export default {
 }
 
 .detail-content {
-  height: calc(100% - 44px - 55px);
+  height: calc(100% - 44px - 49px);
 }
 </style>

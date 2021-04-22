@@ -31,3 +31,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
   * 跳转到，路由
   * 详情页导航栏
   * 详情页请求后台数据、轮播图
+
+### 2021-04-14
+1. Vuex 处理加入购物车功能
+
+### 2021-04-22
+1. fastclick解决移动端300毫秒延迟问题
